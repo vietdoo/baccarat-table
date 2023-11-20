@@ -8,7 +8,10 @@ import React, { useState, useEffect } from 'react';
 export interface ButtonProps {
   color: string;
   value: string;
+  text: string;
+  setOneDimensionalData: (data: number[]) => void;
 }
+
 
 const PlayButton = ({ color, value, text, setOneDimensionalData }) => {
   const buttonStyle = {
@@ -28,25 +31,28 @@ const PlayButton = ({ color, value, text, setOneDimensionalData }) => {
   );
 };
 
-function random_numbers(min = 40, max = 80, n = 10) {
-  var arr = [];
-  for (var i = 0; i < n; i++) {
+function random_numbers(min: number = 40, max: number = 80, n: number = 10): number[] {
+  var arr: number[] = [];
+  for (var i: number = 0; i < n; i++) {
     arr.push(Math.floor(Math.random() * (max - min + 1) + min));
   }
   return arr;
-
 }
+
 const App = () => {
 
-  const [oneDimensionalData, setOneDimensionalData] = useState([]); 
+  const [oneDimensionalData, setOneDimensionalData] = useState<number[]>([]);
+
   useEffect(() => {
     setOneDimensionalData(generateRandomData(50, 70));
-  }, []); 
+  }, []);
+
   
-  const [tableData, setTableData] = useState([]);
-  const [oneTableData, setOneTableData] = useState([]);
-  const [predictData, setPredictData] = useState([]);
-  const [riskData, setRiskData] = useState([]);
+  const [tableData, setTableData] = useState<Array<Array<{ color: string; hasDiagonal: boolean }>>>([]);
+  const [oneTableData, setOneTableData] = useState<Array<Array<{ color: string; hasDiagonal: boolean }>>>([]);
+  const [predictData, setPredictData] = useState<number[]>([]);
+  const [riskData, setRiskData] = useState<number[]>([]);
+
   useEffect(() => {
     console.log('useEffect has been called!');
     setTableData(convertToTableData(oneDimensionalData));
@@ -55,7 +61,8 @@ const App = () => {
     setRiskData(random_numbers(0, 30));
   }, [oneDimensionalData]);
 
-  const yourLabels = [1,2,3,4,5,6,7,8,9,10];
+  const yourLabels: string[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(String);
+
   const yourDatasets = [
     {
       data: predictData,
@@ -81,16 +88,16 @@ const App = () => {
       </div>
       
       <div className="button-container">
-        <PlayButton color="blue" value = "1" text = "Player" tableData={tableData} setOneDimensionalData={setOneDimensionalData} />
-        <PlayButton color="yellow" value = "0"  text = "Tie" tableData={tableData} setOneDimensionalData={setOneDimensionalData}/>
-        <PlayButton color="red" value = "2"  text = "Banker" tableData={tableData} setOneDimensionalData={setOneDimensionalData}/>
+        <PlayButton color="blue" value = "1" text = "Player" setOneDimensionalData={setOneDimensionalData} />
+        <PlayButton color="yellow" value = "0"  text = "Tie" setOneDimensionalData={setOneDimensionalData}/>
+        <PlayButton color="red" value = "2"  text = "Banker" setOneDimensionalData={setOneDimensionalData}/>
       </div>
     </div>
   );
 };
 
-function generateRandomData(min, max) {
-  const data = [];
+function generateRandomData(min: number, max: number): number[] {
+  const data: number[] = [];
   for (let i = 0; i < min + Math.floor(Math.random() * (max - min + 1)); i++) {
     const rand = Math.random();
     const value = rand < 0.1 ? 0 : rand < 0.55 ? 1 : 2; // 0: 10%, 1 và 2: 45% mỗi cái
@@ -98,6 +105,7 @@ function generateRandomData(min, max) {
   }
   return data;
 }
+
 
 function convertToTableData(arr) {
   const numRows = 10;
